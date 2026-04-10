@@ -21,3 +21,5 @@ jobs:
 
       - name: Push Docker image
         run: docker push ${{ secrets.DOCKER_USERNAME }}/pythonapp:latest
+
+        -name: Deploy to EC2
