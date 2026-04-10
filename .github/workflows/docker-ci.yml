@@ -34,20 +34,15 @@ jobs:
       - name: Push Docker image
         run: docker push ${{ secrets.DOCKER_USERNAME }}/pythonapp:latest
 
-<<<<<<< HEAD
       # --------------------
       # 5. Setup SSH key
       # --------------------
       - name: Setup SSH key
-=======
-            - name: Setup SSH key
->>>>>>> 80246fed719b94ce07450325b5c259fea0290ecb
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.EC2_KEY }}" > ~/.ssh/ec2_key.pem
           chmod 600 ~/.ssh/ec2_key.pem
 
-<<<<<<< HEAD
       # --------------------
       # 6. Add EC2 to known hosts
       # --------------------
@@ -55,37 +50,20 @@ jobs:
         run: ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
 
       # --------------------
-      # 7. Deploy on EC2
+      # 7. Deploy to EC2
       # --------------------
       - name: Deploy to EC2
-=======
-      - name: Add EC2 to known hosts
         run: |
-          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+          ssh -i ~/.ssh/ec2_key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} 
 
-      - name: Deploy to EC2 (pull & run container)
->>>>>>> 80246fed719b94ce07450325b5c259fea0290ecb
-        run: |
-          ssh -i ~/.ssh/ec2_key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
             docker pull ${{ secrets.DOCKER_USERNAME }}/pythonapp:latest
 
-<<<<<<< HEAD
             docker stop app || true
             docker rm app || true
 
-=======
-            # Stop old container if exists
-            docker stop app || true
-            docker rm app || true
-
-            # Run new container
->>>>>>> 80246fed719b94ce07450325b5c259fea0290ecb
             docker run -d \
               -p 80:5000 \
               --name app \
               ${{ secrets.DOCKER_USERNAME }}/pythonapp:latest
-<<<<<<< HEAD
-          EOF
-=======
-          EOF
->>>>>>> 80246fed719b94ce07450325b5c259fea0290ecb
+
+            
